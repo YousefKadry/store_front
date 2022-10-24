@@ -36,12 +36,12 @@ async show(id:String): Promise<user>{
         return result.rows[0]
     }
     catch(err){
-        throw new Error(`Could not get the product. Error: ${err}`)
+        throw new Error(`Could not get the user. Error: ${err}`)
     }
 }
 async create(user:user): Promise<user>{
     try{
-        const sql:string = `INSERT INTO users (fname, lname, password) VALUES ($1, $2, $3) RETURNING *` ;
+        const sql:string = `INSERT INTO users (fname, lname, password) VALUES ($1, $2, $3) RETURNING id, fname, lname, password` ;
         const connect = await client.connect();
         const hash = bcrypt.hashSync(user.password + pepper, parseInt(saltRounds))
         const result = await connect.query(sql, [user.fname, user.lname, hash]);
@@ -53,14 +53,14 @@ async create(user:user): Promise<user>{
     }
 }
 async authenticate(fname:string, password:string): Promise<user|null> {
-    const sql:string = `SELECT password FROM users WHERE fname='${fname}'`
+    const sql:string = `SELECT password, id FROM users WHERE fname='${fname}'`
     
     const connect = await client.connect();
     const hashed = await connect.query(sql)
     connect.release();
     const _password = password + pepper
     if(hashed.rows.length){
-        const result = hashed.rows[0]
+        const result = hashed.rows[0];
         if (bcrypt.compareSync(_password, result.password)) {
             return result
         }

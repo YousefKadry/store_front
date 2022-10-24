@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var users_1 = require("../models/users");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var middlewares_1 = __importDefault(require("./middlewares"));
+var TOKEN_SECRET = process.env.TOKEN_SECRET;
 var new_user = new users_1.users();
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var results;
@@ -59,7 +60,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     var results;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, new_user.show(req.body.id)];
+            case 0: return [4 /*yield*/, new_user.show(req.params.id)];
             case 1:
                 results = _a.sent();
                 res.json(results);
@@ -68,47 +69,47 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _user, results, token, err_1;
+    var _user, results, token;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
                 _user = {
-                    fname: req.body.name,
-                    lname: req.body.price,
+                    id: 'null',
+                    fname: req.body.fname,
+                    lname: req.body.lname,
                     password: req.body.password
                 };
                 return [4 /*yield*/, new_user.create(_user)];
             case 1:
                 results = _a.sent();
-                token = jsonwebtoken_1.default.sign({ user: results }, process.env.TOKEN_SECRET);
-                res.json(token);
-                return [3 /*break*/, 3];
-            case 2:
-                err_1 = _a.sent();
-                res.status(400);
-                res.json(err_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                try {
+                    token = jsonwebtoken_1.default.sign({ id: results.id }, TOKEN_SECRET);
+                    res.json(token);
+                }
+                catch (err) {
+                    res.status(400);
+                    res.json(err);
+                }
+                return [2 /*return*/];
         }
     });
 }); };
 var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var u, token, err_2;
+    var results, token, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, new_user.authenticate(req.body.fname, req.body.password)];
             case 1:
-                u = _a.sent();
-                token = jsonwebtoken_1.default.sign({ user: u }, process.env.TOKEN_SECRET);
+                results = _a.sent();
+                token = jsonwebtoken_1.default.sign({ id: results.id }, process.env.TOKEN_SECRET);
                 res.json(token);
                 return [3 /*break*/, 3];
             case 2:
-                err_2 = _a.sent();
+                err_1 = _a.sent();
                 res.status(401);
-                res.json(err_2);
+                res.json(err_1);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -118,6 +119,6 @@ var user_routes = function (app) {
     app.get('/user', middlewares_1.default, index);
     app.get('/user/:id', middlewares_1.default, show);
     app.post('/user', create);
-    app.post('/signin', authenticate);
+    app.post('/user/signin', authenticate);
 };
 exports.default = user_routes;

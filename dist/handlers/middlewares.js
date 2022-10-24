@@ -4,15 +4,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+// @ts-ignore
 var verifyAuthToken = function (req, res, next) {
     try {
         var authorizationHeader = req.headers.authorization;
         var token = authorizationHeader.split(' ')[1];
-        jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
+        var decoded = jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
+        if (!decoded.id) {
+            throw new Error;
+        }
         next();
     }
     catch (error) {
-        res.status(400);
+        return res.status(400).send(error);
     }
 };
 exports.default = verifyAuthToken;

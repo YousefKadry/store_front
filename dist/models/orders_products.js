@@ -39,74 +39,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var product_1 = require("../models/product");
-var middlewares_1 = __importDefault(require("./middlewares"));
-var myProduct = new product_1.products();
-var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var results;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, myProduct.index()];
-            case 1:
-                results = _a.sent();
-                res.json(results);
-                return [2 /*return*/];
-        }
-    });
-}); };
-var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var results;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, myProduct.show(req.params.id)];
-            case 1:
-                results = _a.sent();
-                res.json(results);
-                return [2 /*return*/];
-        }
-    });
-}); };
-var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var prod, results, err_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                prod = {
-                    id: '0',
-                    name: req.body.name,
-                    price: req.body.price
-                };
-                return [4 /*yield*/, myProduct.create(prod)];
-            case 1:
-                results = _a.sent();
-                res.json(results);
-                return [3 /*break*/, 3];
-            case 2:
-                err_1 = _a.sent();
-                res.status(400);
-                res.json(err_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-var destroy = function (res, req) { return __awaiter(void 0, void 0, void 0, function () {
-    var deleted;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, myProduct.delete(req.params.id)];
-            case 1:
-                deleted = _a.sent();
-                res.json(deleted);
-                return [2 /*return*/];
-        }
-    });
-}); };
-var product_routes = function (app) {
-    app.get('/products', index);
-    app.get('/products/:id', show);
-    app.post('/products', middlewares_1.default, create);
-    app.delete('/products/:id', middlewares_1.default, destroy);
-};
-exports.default = product_routes;
+exports.orders_products = void 0;
+var database_1 = __importDefault(require("../database"));
+var orders_products = /** @class */ (function () {
+    function orders_products() {
+    }
+    orders_products.prototype.add_product = function (order_id, product_id, quantity) {
+        return __awaiter(this, void 0, void 0, function () {
+            var sql, connect, result, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        sql = "INSERT INTO orders_products (order_id, product_id, quantity) VALUES($1, $2, $3)";
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        connect = _a.sent();
+                        return [4 /*yield*/, connect.query(sql, [order_id, product_id, quantity])];
+                    case 2:
+                        result = _a.sent();
+                        connect.release();
+                        return [2 /*return*/, result.rows[0]];
+                    case 3:
+                        err_1 = _a.sent();
+                        throw new Error("Could not add the product to the order. Error: ".concat(err_1));
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    orders_products.prototype.delete = function (order_id, product_id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var sql, connect, result, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        sql = "DELETE FROM orders_products where order_id= $1 AND product_id= $2 ";
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        connect = _a.sent();
+                        return [4 /*yield*/, connect.query(sql, [order_id, product_id])];
+                    case 2:
+                        result = _a.sent();
+                        connect.release();
+                        return [2 /*return*/, result.rows[0]];
+                    case 3:
+                        err_2 = _a.sent();
+                        throw new Error("Could not delete the product from the order. Error: ".concat(err_2));
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return orders_products;
+}());
+exports.orders_products = orders_products;

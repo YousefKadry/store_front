@@ -12,14 +12,14 @@ const index = async (req: Request, res: Response): Promise<void> =>{
 }
 
 const show = async (req: Request, res: Response): Promise<void> =>{
-    const results = await myProduct.show(req.body.id);
+    const results = await myProduct.show(req.params.id);
     res.json(results);
 }
 
 const create = async (req: Request, res: Response): Promise<void> =>{
     try{    
         const prod: product = {
-            id: 0,
+            id: '0',
             name: req.body.name,
             price: req.body.price
         }
@@ -33,7 +33,9 @@ const create = async (req: Request, res: Response): Promise<void> =>{
 }
 
 const destroy = async (res:Response, req: Request): Promise<void> =>{
-    const deleted = await myProduct.delete(req.body.id)
+    console.log(req.params.id)
+    console.log('gg')
+    const deleted = await myProduct.delete(req.params.id)
     res.json(deleted)
 }
 

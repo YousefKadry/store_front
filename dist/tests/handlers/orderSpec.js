@@ -42,11 +42,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
 var server_1 = __importDefault(require("../../server"));
 var request = (0, supertest_1.default)(server_1.default);
-describe('Testing Endpoint: /products', function () {
-    var product = {
+describe('Testing Endpoint: /order', function () {
+    var order = {
         id: 'null',
-        name: 'iphone 13',
-        price: '1000'
+        user_id: 1
     };
     var user = {
         id: 'null',
@@ -54,6 +53,11 @@ describe('Testing Endpoint: /products', function () {
         fname: 'yousef',
         lname: 'kadry',
         password: '123456'
+    };
+    var product = {
+        id: 'null',
+        name: 'iphone 13',
+        price: '1000'
     };
     var token;
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -65,7 +69,19 @@ describe('Testing Endpoint: /products', function () {
                         .expect(200)
                         .then(function (res) {
                         token = res.body;
-                    })];
+                    }).then(function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, request.post('/products').
+                                        send(product)
+                                        .set('Authorization', "Bearer ".concat(token))
+                                        .expect(200)];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];
@@ -75,8 +91,8 @@ describe('Testing Endpoint: /products', function () {
     it('testing the create endpoint with valid token', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post('/products').
-                        send(product)
+                case 0: return [4 /*yield*/, request.post('/order').
+                        send(order)
                         .set('Authorization', "Bearer ".concat(token))
                         .expect(200)];
                 case 1:
@@ -85,12 +101,11 @@ describe('Testing Endpoint: /products', function () {
             }
         });
     }); });
-    it('testing the create endpoint with invalid token', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('testing the create endpoint with valid token', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .post('/products')
-                        .send(product)
+                case 0: return [4 /*yield*/, request.post('/order').
+                        send(order)
                         .set('Authorization', "Bearer faketoken")
                         .expect(400)];
                 case 1:
@@ -99,11 +114,12 @@ describe('Testing Endpoint: /products', function () {
             }
         });
     }); });
-    it('testing index endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('testing show endpoint with valid token', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, request
-                        .get('/products')
+                        .get('/order/1')
+                        .set('Authorization', "Bearer ".concat(token))
                         .expect(200)];
                 case 1:
                     _a.sent();
@@ -111,11 +127,26 @@ describe('Testing Endpoint: /products', function () {
             }
         });
     }); });
-    it('testing show endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('testing show endpoint with invalid token', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, request
-                        .get('/products/1')
+                        .get('/order/8')
+                        .set('Authorization', "Bearer faketoken")
+                        .expect(400)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('testing addproduct endpoint with valid token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .post('/order/1/addProduct')
+                        .send({ product_id: 2, quantity: "3" })
+                        .set('Authorization', "Bearer ".concat(token))
                         .expect(200)];
                 case 1:
                     _a.sent();
@@ -123,11 +154,25 @@ describe('Testing Endpoint: /products', function () {
             }
         });
     }); });
-    it('testing destroy endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('testing deleteproduct endpoint with valid token', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, request
-                        .delete('/products/1')
+                        .delete('/order/1/deleteProduct')
+                        .send({ product_id: 2 })
+                        .set('Authorization', "Bearer ".concat(token))
+                        .expect(200)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('testing complete endpoint with valid token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .patch('/order/1')
                         .set('Authorization', "Bearer ".concat(token))
                         .expect(200)];
                 case 1:

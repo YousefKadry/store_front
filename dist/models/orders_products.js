@@ -35,12 +35,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.orders_products = void 0;
-var database_1 = __importDefault(require("../database"));
+var database_1 = require("../database");
 var orders_products = /** @class */ (function () {
     function orders_products() {
     }
@@ -51,8 +48,8 @@ var orders_products = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        sql = "INSERT INTO orders_products (order_id, product_id, quantity) VALUES($1, $2, $3)";
-                        return [4 /*yield*/, database_1.default.connect()];
+                        sql = "INSERT INTO orders_products (order_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING *";
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql, [order_id, product_id, quantity])];
@@ -76,7 +73,7 @@ var orders_products = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
                         sql = "DELETE FROM orders_products where order_id= $1 AND product_id= $2 ";
-                        return [4 /*yield*/, database_1.default.connect()];
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql, [order_id, product_id])];

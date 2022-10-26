@@ -62,7 +62,7 @@ var add_product = function (req, res) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
-var destroy = function (res, req) { return __awaiter(void 0, void 0, void 0, function () {
+var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var deleted;
     return __generator(this, function (_a) {
         switch (_a.label) {

@@ -5,38 +5,45 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index 
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+- Index (get)
+- Show (get)(args: product id) 
+- Create [token required] (post)
+- Delete [token required] (delete)
+
 
 #### Users
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+- Index [token required] (get)
+- Show (args: user id)[token required] (get)
+- Create N[token required] (post)
 
 #### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- Current Order by user (args: user id)[token required] (get)
+- Completed Orders by user (args: user id)[token required] (patch)
+
+#### Orders Pooducts
+-Add product to active order (args: order id)[token required] (post)
+-Deete product from active order (args: order id)[token required] (delete)
 
 ## Data Shapes
 #### Product
--  id
-- name
-- price
-- [OPTIONAL] category
+-  id  SERIAL PRIMARY KEY
+- name  VARCHAR
+- price  FLOAT(2)
+
 
 #### User
-- id
-- firstName
-- lastName
-- password
+- id  SERIAL PRIMARY KEY
+- username  VARCHAR
+- firstName  VARCHAR
+- lastName  VARCHAR
+- password  VARCHAR
 
 #### Orders
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+- id  SERIAL PRIMARY KEY
+- user_id  INTEGER REFERENCES users(id)
+- status of order (active or complete)  VARCHAR
 
+#### Orders Pooducts
+- order_id  INTEGER REFERENCES orders(id)
+- product_id of each product in the order  INTEGER REFERENCES product(id)
+- quantity of each product in the order  INTEGER

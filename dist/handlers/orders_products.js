@@ -39,45 +39,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var product_1 = require("../models/product");
+var orders_products_1 = require("../models/orders_products");
 var middlewares_1 = __importDefault(require("./middlewares"));
-var myProduct = new product_1.products();
-var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var results;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, myProduct.index()];
-            case 1:
-                results = _a.sent();
-                res.json(results);
-                return [2 /*return*/];
-        }
-    });
-}); };
-var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var results;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, myProduct.show(req.params.id)];
-            case 1:
-                results = _a.sent();
-                res.json(results);
-                return [2 /*return*/];
-        }
-    });
-}); };
-var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var prod, results, err_1;
+var added_prodcut = new orders_products_1.orders_products();
+var add_product = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var results, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                prod = {
-                    id: '0',
-                    name: req.body.name,
-                    price: req.body.price
-                };
-                return [4 /*yield*/, myProduct.create(prod)];
+                return [4 /*yield*/, added_prodcut.add_product(req.params.order_id, req.body.product_id, req.body.quantity)];
             case 1:
                 results = _a.sent();
                 res.json(results);
@@ -95,7 +66,7 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
     var deleted;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, myProduct.delete(req.params.id)];
+            case 0: return [4 /*yield*/, added_prodcut.delete(req.params.order_id, req.body.product_id)];
             case 1:
                 deleted = _a.sent();
                 res.json(deleted);
@@ -103,10 +74,8 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
         }
     });
 }); };
-var product_routes = function (app) {
-    app.get('/products', index);
-    app.post('/products', middlewares_1.default, create);
-    app.get('/products/:id', show);
-    app.delete('/products/:id', middlewares_1.default, destroy);
+var cart_routes = function (app) {
+    app.post('/order/:order_id/addProduct', middlewares_1.default, add_product);
+    app.delete('/order/:order_id/deleteProduct', middlewares_1.default, destroy);
 };
-exports.default = product_routes;
+exports.default = cart_routes;

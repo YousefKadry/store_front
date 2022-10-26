@@ -46,7 +46,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     var results;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, myOrder.show_current(req.body.id)];
+            case 0: return [4 /*yield*/, myOrder.show_current(req.params.user_id)];
             case 1:
                 results = _a.sent();
                 res.json(results);
@@ -55,15 +55,17 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _order, results, err_1;
+    var order, results, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                _order = {
-                    user_id: req.body.id,
+                order = {
+                    id: 'null',
+                    user_id: req.body.user_id,
+                    status: 'active'
                 };
-                return [4 /*yield*/, myOrder.create(_order)];
+                return [4 /*yield*/, myOrder.create(order)];
             case 1:
                 results = _a.sent();
                 res.json(results);
@@ -81,7 +83,7 @@ var complete = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
     var results;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, myOrder.complete_order(req.body.id)];
+            case 0: return [4 /*yield*/, myOrder.complete_order(req.params.id)];
             case 1:
                 results = _a.sent();
                 res.json(results);
@@ -90,8 +92,8 @@ var complete = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
     });
 }); };
 var order_routes = function (app) {
-    app.patch('/order', middlewares_1.default, complete);
-    app.get('/order/:id', middlewares_1.default, show);
+    app.patch('/order/:id', middlewares_1.default, complete);
+    app.get('/order/:user_id', middlewares_1.default, show);
     app.post('/order', middlewares_1.default, create);
 };
 exports.default = order_routes;

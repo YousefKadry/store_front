@@ -22,6 +22,7 @@ const show = async (req: Request, res: Response): Promise<void> => {
 const create = async (req: Request, res: Response): Promise<void> => {
     const _user: user = {
         id: 'null',
+        username:req.body.username,
         fname: req.body.fname,
         lname: req.body.lname,
         password: req.body.password
@@ -40,7 +41,7 @@ const create = async (req: Request, res: Response): Promise<void> => {
 const authenticate = async (req: Request, res: Response): Promise<void> => {
 
     try {
-        const results = await new_user.authenticate(req.body.fname, req.body.password)
+        const results = await new_user.authenticate(req.body.username, req.body.password)
         let token = jwt.sign({ id: results!.id }, process.env.TOKEN_SECRET as string)
         res.json(token)
     }

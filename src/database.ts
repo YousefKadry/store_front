@@ -9,16 +9,10 @@ const { POSTGRS_HOST ,
         POSTGRS_USER ,
         POSTGRS_PASSWORD,
         PORT,
-        ENV } = process.env;
+        } = process.env;
+const ENV = process.env.ENV;
 
-
-
-let client = new Pool({
-    host: POSTGRS_HOST,
-    port :(PORT as unknown) as number,
-    database: POSTGRS_DB,
-    user: POSTGRS_USER,
-    password: POSTGRS_PASSWORD});
+export let client:Pool;
 
 if(ENV == 'test'){
     client = new Pool({
@@ -27,7 +21,26 @@ if(ENV == 'test'){
         database: POSTGRS_TEST_DB,
         user: POSTGRS_USER,
         password: POSTGRS_PASSWORD});
+            
     }
+else{
+    client = new Pool({
+    host: POSTGRS_HOST,
+    port :(PORT as unknown) as number,
+    database: POSTGRS_DB,
+    user: POSTGRS_USER,
+    password: POSTGRS_PASSWORD});
+}
 
-export  default client
+
+    // let client = new Pool({
+    // host: POSTGRS_HOST,
+    // port :(PORT as unknown) as number,
+    // database: POSTGRS_DB,
+    // user: POSTGRS_USER,
+    // password: POSTGRS_PASSWORD});
+    
+
+
+
 

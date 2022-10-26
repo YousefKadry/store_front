@@ -35,103 +35,82 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var supertest_1 = __importDefault(require("supertest"));
-var server_1 = __importDefault(require("../../server"));
-var request = (0, supertest_1.default)(server_1.default);
-describe('Testing Endpoint: /products', function () {
-    var product = {
-        id: 'null',
-        name: 'iphone 13',
-        price: '1000'
-    };
-    var user = {
-        id: 'null',
-        username: 'yousefkadry00',
-        fname: 'yousef',
-        lname: 'kadry',
-        password: '123456'
-    };
-    var token;
-    beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+var users_1 = require("../../models/users");
+var userModel = new users_1.users();
+var user = {
+    id: 'null',
+    username: 'yousefkadry00',
+    fname: 'yousef',
+    lname: 'kadry',
+    password: '123456'
+};
+var userExample;
+describe('Model testing: user model', function () {
+    it('having create method', function () {
+        expect(userModel.create).toBeDefined();
+    });
+    it('Testing the create method with a user', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .post('/user')
-                        .send(user)
-                        .expect(200)
-                        .then(function (res) {
-                        token = res.body;
-                    })];
+                case 0: return [4 /*yield*/, userModel.create(user)];
                 case 1:
-                    _a.sent();
+                    userExample = _a.sent();
+                    expect({
+                        username: userExample.username,
+                        fname: userExample.fname,
+                        lname: userExample.lname
+                    })
+                        .toEqual({
+                        username: 'yousefkadry00',
+                        fname: 'yousef',
+                        lname: 'kadry',
+                    });
                     return [2 /*return*/];
             }
         });
     }); });
-    it('testing the create endpoint with valid token', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('having index method', function () {
+        expect(userModel.index).toBeDefined();
+    });
+    it('Testing the index method to include the userExample', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var users;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post('/products').
-                        send(product)
-                        .set('Authorization', "Bearer ".concat(token))
-                        .expect(200)];
+                case 0: return [4 /*yield*/, userModel.index()];
                 case 1:
-                    _a.sent();
+                    users = _a.sent();
+                    expect(users).toContain(userExample);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('testing the create endpoint with invalid token', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('having show method', function () {
+        expect(userModel.show).toBeDefined();
+    });
+    it('Testing the show model to return the userExample', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var findUser;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .post('/products')
-                        .send(product)
-                        .set('Authorization', "Bearer faketoken")
-                        .expect(400)];
+                case 0: return [4 /*yield*/, userModel.show(userExample.id)];
                 case 1:
-                    _a.sent();
+                    findUser = _a.sent();
+                    expect(findUser).toEqual(userExample);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('testing index endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('having authenticate method', function () {
+        expect(userModel.authenticate).toBeDefined();
+    });
+    it('Testing the authenticate model to return the fname', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var authUser;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .get('/products')
-                        .expect(200)];
+                case 0: return [4 /*yield*/, userModel.authenticate(user.username, user.password)];
                 case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('testing show endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .get('/products/1')
-                        .expect(200)];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('testing destroy endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .delete('/products/1')
-                        .set('Authorization', "Bearer ".concat(token))
-                        .expect(200)];
-                case 1:
-                    _a.sent();
+                    authUser = _a.sent();
+                    expect(authUser.fname).toEqual(userExample.fname);
                     return [2 /*return*/];
             }
         });

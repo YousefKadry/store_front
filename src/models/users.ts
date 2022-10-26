@@ -1,12 +1,13 @@
-import client from "../database";
+// @ts-ignore
+import {client} from "../database";
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
 
 const saltRounds = process.env.SALT_ROUNDS as string
 const pepper = process.env.BCRYPT_PASSWORD as string
 
 export type user = {
     id:string;
+    username:string;
     fname: string;
     lname: string;
     password: string;
@@ -16,6 +17,7 @@ export class users{
 async index(): Promise<user[]> {
     try{
         const sql:string = 'SELECT * FROM users';
+        // @ts-ignore
         const connect = await client.connect();
         const result = await connect.query(sql);
         connect.release();
@@ -36,25 +38,24 @@ async show(id:String): Promise<user>{
         return result.rows[0]
     }
     catch(err){
-        throw new Error(`Could not get the user. Error: ${err}`)
+        throw new Error(`Could not get the users. Error: ${err}`)
     }
 }
 async create(user:user): Promise<user>{
     try{
-        const sql:string = `INSERT INTO users (fname, lname, password) VALUES ($1, $2, $3) RETURNING id, fname, lname, password` ;
+        const sql:string = `INSERT INTO users (username, fname, lname, password) VALUES ($1, $2, $3, $4) RETURNING *` ;
         const connect = await client.connect();
         const hash = bcrypt.hashSync(user.password + pepper, parseInt(saltRounds))
-        const result = await connect.query(sql, [user.fname, user.lname, hash]);
+        const result = await connect.query(sql, [user.username ,user.fname, user.lname, hash]);
         connect.release();
         return result.rows[0]
     }
     catch(err){
-        throw new Error(`Could not create the product. Error: ${err}`)
+        throw new Error(`Could not create the user. Error: ${err}`)
     }
 }
-async authenticate(fname:string, password:string): Promise<user|null> {
-    const sql:string = `SELECT password, id FROM users WHERE fname='${fname}'`
-    
+async authenticate(username:string, password:string): Promise<user|null> {
+    const sql:string = `SELECT * FROM users WHERE username='${username}'`
     const connect = await client.connect();
     const hashed = await connect.query(sql)
     connect.release();

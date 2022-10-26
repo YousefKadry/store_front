@@ -35,12 +35,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.products = void 0;
-var database_1 = __importDefault(require("../database"));
+// @ts-ignore
+var database_1 = require("../database");
 var products = /** @class */ (function () {
     function products() {
     }
@@ -52,7 +50,7 @@ var products = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
                         sql = 'SELECT * FROM products';
-                        return [4 /*yield*/, database_1.default.connect()];
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql)];
@@ -76,7 +74,7 @@ var products = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
                         sql = "SELECT * FROM products WHERE id = ".concat(id);
-                        return [4 /*yield*/, database_1.default.connect()];
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql)];
@@ -100,7 +98,7 @@ var products = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
                         sql = "INSERT INTO products (name, price) VALUES ($1, $2) RETURNING *";
-                        return [4 /*yield*/, database_1.default.connect()];
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql, [product.name, product.price])];
@@ -118,24 +116,28 @@ var products = /** @class */ (function () {
     };
     products.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var sql, connect, result, err_4;
+            var sql1, sql2, connect, result, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        sql = "delete FROM products WHERE id = ".concat(id);
-                        return [4 /*yield*/, database_1.default.connect()];
+                        _a.trys.push([0, 4, , 5]);
+                        sql1 = "delete FROM orders_products WHERE product_id = ".concat(id);
+                        sql2 = "delete FROM products WHERE id = ".concat(id, " RETURNING *");
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
-                        return [4 /*yield*/, connect.query(sql)];
+                        return [4 /*yield*/, connect.query(sql1)];
                     case 2:
+                        _a.sent();
+                        return [4 /*yield*/, connect.query(sql2)];
+                    case 3:
                         result = _a.sent();
                         connect.release();
                         return [2 /*return*/, result.rows[0]];
-                    case 3:
+                    case 4:
                         err_4 = _a.sent();
                         throw new Error("Could not delete the product. Error: ".concat(err_4));
-                    case 4: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

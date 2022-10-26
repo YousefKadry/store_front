@@ -46,6 +46,7 @@ var request = (0, supertest_1.default)(server_1.default);
 describe('Testing Endpoint: /user', function () {
     var user = {
         id: 'null',
+        username: "yousef123",
         fname: 'yousef',
         lname: 'kadry',
         password: '123456'
@@ -60,7 +61,6 @@ describe('Testing Endpoint: /user', function () {
                         .expect(200)
                         .then(function (res) {
                         token = res.body;
-                        // console.log(token)
                         var decoded = (0, jsonwebtoken_1.verify)(token, process.env.TOKEN_SECRET);
                         user_id = decoded.id;
                     })];
@@ -120,7 +120,7 @@ describe('Testing Endpoint: /user', function () {
             }
         });
     }); });
-    it('Testing the authorization endpoint with user', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('Testing the authenticate endpoint with user', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, request

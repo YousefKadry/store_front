@@ -40,7 +40,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.users = void 0;
-var database_1 = __importDefault(require("../database"));
+// @ts-ignore
+var database_1 = require("../database");
 var bcrypt_1 = __importDefault(require("bcrypt"));
 var saltRounds = process.env.SALT_ROUNDS;
 var pepper = process.env.BCRYPT_PASSWORD;
@@ -55,7 +56,7 @@ var users = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
                         sql = 'SELECT * FROM users';
-                        return [4 /*yield*/, database_1.default.connect()];
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql)];
@@ -79,7 +80,7 @@ var users = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
                         sql = "SELECT * FROM users WHERE id = ".concat(id);
-                        return [4 /*yield*/, database_1.default.connect()];
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql)];
@@ -89,7 +90,7 @@ var users = /** @class */ (function () {
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_2 = _a.sent();
-                        throw new Error("Could not get the user. Error: ".concat(err_2));
+                        throw new Error("Could not get the users. Error: ".concat(err_2));
                     case 4: return [2 /*return*/];
                 }
             });
@@ -102,32 +103,32 @@ var users = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        sql = "INSERT INTO users (fname, lname, password) VALUES ($1, $2, $3) RETURNING id, fname, lname, password";
-                        return [4 /*yield*/, database_1.default.connect()];
+                        sql = "INSERT INTO users (username, fname, lname, password) VALUES ($1, $2, $3, $4) RETURNING *";
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         hash = bcrypt_1.default.hashSync(user.password + pepper, parseInt(saltRounds));
-                        return [4 /*yield*/, connect.query(sql, [user.fname, user.lname, hash])];
+                        return [4 /*yield*/, connect.query(sql, [user.username, user.fname, user.lname, hash])];
                     case 2:
                         result = _a.sent();
                         connect.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_3 = _a.sent();
-                        throw new Error("Could not create the product. Error: ".concat(err_3));
+                        throw new Error("Could not create the user. Error: ".concat(err_3));
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    users.prototype.authenticate = function (fname, password) {
+    users.prototype.authenticate = function (username, password) {
         return __awaiter(this, void 0, void 0, function () {
             var sql, connect, hashed, _password, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sql = "SELECT password, id FROM users WHERE fname='".concat(fname, "'");
-                        return [4 /*yield*/, database_1.default.connect()];
+                        sql = "SELECT * FROM users WHERE username='".concat(username, "'");
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql)];

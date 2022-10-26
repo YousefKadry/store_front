@@ -35,24 +35,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.orders = void 0;
-var database_1 = __importDefault(require("../database"));
+// @ts-ignore
+var database_1 = require("../database");
 var orders = /** @class */ (function () {
     function orders() {
     }
-    orders.prototype.show_current = function (id) {
+    orders.prototype.show_current = function (user_id) {
         return __awaiter(this, void 0, void 0, function () {
             var sql, connect, result, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        sql = "SELECT * FROM orders WHERE id = ".concat(id, " AND status = 'active'");
-                        return [4 /*yield*/, database_1.default.connect()];
+                        sql = "SELECT * FROM orders WHERE user_id = ".concat(user_id, " AND status = 'active'");
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql)];
@@ -75,11 +73,11 @@ var orders = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        sql = "INSERT INTO orders (user_id, status) VALUES ($1, active)";
-                        return [4 /*yield*/, database_1.default.connect()];
+                        sql = "INSERT INTO orders (user_id, status) VALUES ($1, $2) RETURNING *";
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
-                        return [4 /*yield*/, connect.query(sql, [order.user_id])];
+                        return [4 /*yield*/, connect.query(sql, [order.user_id, order.status])];
                     case 2:
                         result = _a.sent();
                         connect.release();
@@ -99,8 +97,8 @@ var orders = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        sql = "UPDATE orders SET status = \"complete\" WHERE id = ".concat(id);
-                        return [4 /*yield*/, database_1.default.connect()];
+                        sql = "UPDATE orders SET status = 'complete' WHERE id = ".concat(id, " RETURNING *");
+                        return [4 /*yield*/, database_1.client.connect()];
                     case 1:
                         connect = _a.sent();
                         return [4 /*yield*/, connect.query(sql)];

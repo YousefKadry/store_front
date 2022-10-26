@@ -6,8 +6,9 @@ const added_prodcut = new orders_products()
 
 
 const add_product = async (req: Request, res: Response): Promise<void> =>{
+
     try{
-        const results = await added_prodcut.add_product(req.body.order_id, req.body.product_id, req.body.quantity);
+        const results = await added_prodcut.add_product(req.params.order_id, req.body.product_id, req.body.quantity);
         res.json(results);
     }
     catch(err){
@@ -16,8 +17,8 @@ const add_product = async (req: Request, res: Response): Promise<void> =>{
     }
 }
 
-const destroy = async (res:Response, req: Request): Promise<void> =>{
-    const deleted = await added_prodcut.delete(req.body.order_id, req.body.product_id)
+const destroy = async (req: Request, res:Response): Promise<void> =>{
+    const deleted = await added_prodcut.delete(req.params.order_id, req.body.product_id)
     res.json(deleted)
 }
 

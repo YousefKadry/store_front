@@ -75,6 +75,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0:
                 _user = {
                     id: 'null',
+                    username: req.body.username,
                     fname: req.body.fname,
                     lname: req.body.lname,
                     password: req.body.password
@@ -100,7 +101,7 @@ var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, new_user.authenticate(req.body.fname, req.body.password)];
+                return [4 /*yield*/, new_user.authenticate(req.body.username, req.body.password)];
             case 1:
                 results = _a.sent();
                 token = jsonwebtoken_1.default.sign({ id: results.id }, process.env.TOKEN_SECRET);

@@ -8,6 +8,7 @@ const request = supertest(app);
 describe('Testing Endpoint: /user', () => {
     const user = {
         id: 'null',
+        username:"yousef123",
         fname: 'yousef',
         lname: 'kadry',
         password: '123456'
@@ -22,7 +23,6 @@ describe('Testing Endpoint: /user', () => {
         .expect(200)
         .then((res) => {
             token = res.body;
-            // console.log(token)
             const decoded = verify(
                 token as string,
                 process.env.TOKEN_SECRET as string
@@ -62,7 +62,7 @@ describe('Testing Endpoint: /user', () => {
     });
 
 
-    it('Testing the authorization endpoint with user', async () => {
+    it('Testing the authenticate endpoint with user', async () => {
         await request
         .post('/user/signin')
         .send(user)

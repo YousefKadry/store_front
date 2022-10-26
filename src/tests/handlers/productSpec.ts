@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 import app from '../../server';
-import { JwtPayload, verify } from 'jsonwebtoken';
 import { product } from '../../models/product';
 
 const request = supertest(app);
@@ -13,12 +12,13 @@ describe('Testing Endpoint: /products', () => {
     }
     const user = {
         id: 'null',
+        username:'yousefkadry00',
         fname: 'yousef',
         lname: 'kadry',
         password: '123456'
     }
     let token: string;
-    let user_id: string;
+    
     beforeAll(async () => {
         await request
         .post('/user')

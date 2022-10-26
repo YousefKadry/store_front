@@ -35,103 +35,78 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var supertest_1 = __importDefault(require("supertest"));
-var server_1 = __importDefault(require("../../server"));
-var request = (0, supertest_1.default)(server_1.default);
-describe('Testing Endpoint: /products', function () {
-    var product = {
-        id: 'null',
-        name: 'iphone 13',
-        price: '1000'
-    };
-    var user = {
-        id: 'null',
-        username: 'yousefkadry00',
-        fname: 'yousef',
-        lname: 'kadry',
-        password: '123456'
-    };
-    var token;
-    beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+var product_1 = require("../../models/product");
+var productModel = new product_1.products();
+var prod = {
+    id: '0',
+    name: 'iphone13',
+    price: 1000
+};
+var productExample;
+describe('Model testing: user model', function () {
+    it('having create method', function () {
+        expect(productModel.create).toBeDefined();
+    });
+    it('Testing the create method with a product', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .post('/user')
-                        .send(user)
-                        .expect(200)
-                        .then(function (res) {
-                        token = res.body;
-                    })];
+                case 0: return [4 /*yield*/, productModel.create(prod)];
                 case 1:
-                    _a.sent();
+                    productExample = _a.sent();
+                    expect({
+                        name: productExample.name,
+                        price: productExample.price
+                    })
+                        .toEqual({
+                        name: 'iphone13',
+                        price: 1000
+                    });
                     return [2 /*return*/];
             }
         });
     }); });
-    it('testing the create endpoint with valid token', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('having index method', function () {
+        expect(productModel.index).toBeDefined();
+    });
+    it('Testing the index method to include the productExample', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var products;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post('/products').
-                        send(product)
-                        .set('Authorization', "Bearer ".concat(token))
-                        .expect(200)];
+                case 0: return [4 /*yield*/, productModel.index()];
                 case 1:
-                    _a.sent();
+                    products = _a.sent();
+                    expect(products).toContain(productExample);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('testing the create endpoint with invalid token', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('having show method', function () {
+        expect(productModel.show).toBeDefined();
+    });
+    it('Testing the show method to return the productExample', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var findProduct;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .post('/products')
-                        .send(product)
-                        .set('Authorization', "Bearer faketoken")
-                        .expect(400)];
+                case 0: return [4 /*yield*/, productModel.show(productExample.id)];
                 case 1:
-                    _a.sent();
+                    findProduct = _a.sent();
+                    expect(findProduct).toEqual(productExample);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('testing index endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('having delete method', function () {
+        expect(productModel.delete).toBeDefined();
+    });
+    it('Testing the delete method to return the productExample', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var deletedProduct;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .get('/products')
-                        .expect(200)];
+                case 0: return [4 /*yield*/, productModel.delete(productExample.id)];
                 case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('testing show endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .get('/products/1')
-                        .expect(200)];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('testing destroy endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .delete('/products/1')
-                        .set('Authorization', "Bearer ".concat(token))
-                        .expect(200)];
-                case 1:
-                    _a.sent();
+                    deletedProduct = _a.sent();
+                    expect(deletedProduct).toEqual(productExample);
                     return [2 /*return*/];
             }
         });

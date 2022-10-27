@@ -18,8 +18,14 @@ const add_product = async (req: Request, res: Response): Promise<void> =>{
 }
 
 const destroy = async (req: Request, res:Response): Promise<void> =>{
-    const deleted = await added_prodcut.delete(req.params.order_id, req.body.product_id)
-    res.json(deleted)
+    try{
+        const deleted = await added_prodcut.delete(req.params.order_id, req.body.product_id)
+        res.json(deleted)
+    }
+    catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const cart_routes = (app: express.Application) =>{

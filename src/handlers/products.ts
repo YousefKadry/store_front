@@ -7,13 +7,26 @@ const myProduct = new products()
 
 
 const index = async (req: Request, res: Response): Promise<void> =>{
-    const results = await myProduct.index();
-    res.json(results)
+    try{    
+        const results = await myProduct.index();
+        res.json(results)
+    }
+    catch (err) {
+        res.status(400)
+        res.json(err)
+    }
+    
 }
 
 const show = async (req: Request, res: Response): Promise<void> =>{
-    const results = await myProduct.show(req.params.id);
-    res.json(results);
+    try{
+        const results = await myProduct.show(req.params.id);
+        res.json(results);
+    }
+    catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const create = async (req: Request, res: Response): Promise<void> =>{
@@ -33,8 +46,14 @@ const create = async (req: Request, res: Response): Promise<void> =>{
 }
 
 const destroy = async (req: Request, res:Response): Promise<void> =>{
+    try{
     const deleted = await myProduct.delete(req.params.id)
     res.json(deleted)
+}
+    catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const product_routes = (app: express.Application) =>{

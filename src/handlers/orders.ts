@@ -6,8 +6,14 @@ const myOrder = new orders()
 
 
 const show = async (req: Request, res: Response): Promise<void> =>{
-    const results = await myOrder.show_current(req.params.user_id);
-    res.json(results);
+    try{
+        const results = await myOrder.show_current(req.params.user_id);
+        res.json(results);
+    }
+    catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const create = async (req: Request, res: Response): Promise<void> =>{
@@ -26,8 +32,14 @@ const create = async (req: Request, res: Response): Promise<void> =>{
     }
 }
 const complete = async (req: Request, res: Response): Promise<void> =>{
-    const results = await myOrder.complete_order(req.params.id);
-    res.json(results);
+    try{
+        const results = await myOrder.complete_order(req.params.id);
+        res.json(results);
+    }
+    catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 

@@ -10,13 +10,25 @@ const new_user = new users()
 
 
 const index = async (req: Request, res: Response): Promise<void> => {
+    try{    
     const results = await new_user.index();
-    res.json(results)
+        res.json(results)
+    }
+    catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const show = async (req: Request, res: Response): Promise<void> => {
-    const results = await new_user.show(req.params.id);
-    res.json(results);
+    try{   
+        const results = await new_user.show(req.params.id);
+        res.json(results);
+    }
+    catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const create = async (req: Request, res: Response): Promise<void> => {
@@ -27,9 +39,9 @@ const create = async (req: Request, res: Response): Promise<void> => {
         lname: req.body.lname,
         password: req.body.password
     }
-    const results = await new_user.create(_user);
-
+    
     try {
+        const results = await new_user.create(_user);
         var token = jwt.sign({ id: results.id }, TOKEN_SECRET as jwt.Secret)
         res.json(token)
     }

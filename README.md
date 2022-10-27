@@ -34,6 +34,18 @@ run the following commands to:
 
 #### Creating and Conncting the Databas:
 You can not run the app before creating the database
-You have to create database store_front using psql shell, setting .env file with right info for env variables and then run this command:
+- in psql run the following script to create a user
+> CREATE USER postgres WITH PASSWORD postgres; 
+- to create dev and test database reun the following script
+> CREATE DATABASE store_front;
+> CREATE DATABASE store_front_test;
+- then run this script in the terminal to setup database schemas:
 > db-migrate up 
-now you can run the app using start script
+
+-now you can run the app using start script
+
+------------------------------------------------------------------------------------
+#### Connections info
+database port: `5433`
+database host:`127.0.0.1` 
+backend port:`0.0.0.0:3000`
